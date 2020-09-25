@@ -5,7 +5,7 @@ from sklearn import metrics
 import seaborn as sn
 import matplotlib.pyplot as plt
 import numpy as np
-from RNA_1.BroadLearningSystem import BLS
+from RNA_1.BroadLearningSystem import BLS,BLS_AddEnhanceNodes
 import pandas as pd
 
 features1 = pd.read_csv('../Dataset/Sample1.csv')
@@ -31,25 +31,26 @@ X = sc.fit_transform(X)
 
 X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.25, shuffle=True)
 
-N1 = 10 # # of nodes belong to each window
-N2 = 10  # # of windows -------Feature mapping layer
-N3 = 500  # # of enhancement nodes -----Enhance layer
+N1 = 10 # # of nodes belong to each window 10
+N2 = 10  # # of windows -------Feature mapping layer 10
+N3 = 500  # # of enhancement nodes -----Enhance layer 500
 L = 5  # # of incremental steps
-M1 = 50  # # of adding enhance nodes
+M1 = 50  # # of adding enhance nodes 50
 s = 0.8  # shrink coefficient
 C = 2 ** -30  # Regularization coefficient
 
 y_train=y_train.values
 y_test = y_test.values
-y_train=np.array(y_train)
-y_test =np.array(y_test)
+y_train=np.array([y_train]).transpose()
+y_test =np.array([y_test]).transpose()
 
-X_train = np.array([[1,1,1],
-                   [2,2,2],
-                   [3,3,3]])
-X_test  = np.array([[1],[1],[1]])
-y_train=np.array([1,0,1])
-y_test=np.array([1])
+# X_train=X_train[:2]
+# y_train=y_train[:2]
+
+
 print('-------------------BLS_BASE---------------------------')
-# BLS(np.transpose(X_train), np.transpose(y_train), np.transpose(X_test), np.transpose(y_test), s, C, N1, N2, N3)
-BLS(np.transpose(X_train), y_train, np.transpose(X_test), y_test, s, C, N1, N2, N3)
+BLS(X_train, y_train, X_test, y_test, s, C, N1, N2, N3)
+print('-------------------BLS_ENHANCE------------------------')
+BLS_AddEnhanceNodes(X_train, y_train, X_test, y_test,s,C,N1,N2,N3,L,M1)
+
+

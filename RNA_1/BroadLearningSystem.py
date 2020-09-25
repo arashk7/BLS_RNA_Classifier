@@ -20,7 +20,7 @@ import time
 '''
 #输出训练/测试准确率
 '''
-def show_accuracy(predictLabel,Label): 
+def show_accuracy(predictLabel,Label):
     count = 0
     label_1 = np.zeros(Label.shape[0])
     predlabel = []
@@ -28,6 +28,18 @@ def show_accuracy(predictLabel,Label):
     predlabel = predictLabel.argmax(axis = 1)
     for j in list(range(Label.shape[0])):
         if label_1[j] == predlabel[j]:
+            count += 1
+    return (round(count/len(Label),5))
+
+def show_accuracy_binary(predictLabel,Label):
+    count = 0
+    label_1 = np.zeros(Label.shape[0])
+    predlabel = []
+    label_1 = Label.argmax(axis = 1)
+    predlabel = predictLabel.argmax(axis = 1)
+    for j in list(range(Label.shape[0])):
+        p=np.round(predictLabel[j])
+        if label_1[j] == p:
             count += 1
     return (round(count/len(Label),5))
 '''
@@ -175,7 +187,8 @@ def BLS(train_x,train_y,test_x,test_y,s,c,N1,N2,N3):
     OutputOfTest = np.dot(InputOfOutputLayerTest,OutputWeight)
     time_end=time.time() #训练完成
     testTime = time_end - time_start
-    testAcc = show_accuracy(OutputOfTest,test_y)
+
+    testAcc = show_accuracy_binary(OutputOfTest,test_y)
     print('Testing accurate is' ,testAcc * 100,'%')
     print('Testing time is ',testTime,'s')
     test_acc[0][0] = testAcc
@@ -287,7 +300,7 @@ def BLS_AddEnhanceNodes(train_x,train_y,test_x,test_y,s,c,N1,N2,N3,L,M):
     OutputOfTest = np.dot(InputOfOutputLayerTest,OutputWeight)
     time_end=time.time() #训练完成
     testTime = time_end - time_start
-    testAcc = show_accuracy(OutputOfTest,test_y)
+    testAcc = show_accuracy_binary(OutputOfTest,test_y)
     print('Testing accurate is' ,testAcc*100,'%')
     print('Testing time is ',testTime,'s')
     test_acc[0][0] = testAcc
@@ -325,7 +338,7 @@ def BLS_AddEnhanceNodes(train_x,train_y,test_x,test_y,s,c,N1,N2,N3,L,M):
         Training_time = time.time() - time_start
         train_time[0][e+1] = Training_time
         OutputOfTrain1 = InputOfOutputLayer.dot(OutputWeightEnd)
-        TrainingAccuracy = show_accuracy(OutputOfTrain1,train_y)
+        TrainingAccuracy = show_accuracy_binary(OutputOfTrain1,train_y)
         train_acc[0][e+1] = TrainingAccuracy
         print('Incremental Training Accuracy is :', TrainingAccuracy * 100, ' %' )
         
@@ -335,7 +348,7 @@ def BLS_AddEnhanceNodes(train_x,train_y,test_x,test_y,s,c,N1,N2,N3,L,M):
         InputOfOutputLayerTest=np.hstack([InputOfOutputLayerTest, OutputOfEnhanceLayerAddTest])
 
         OutputOfTest1 = InputOfOutputLayerTest.dot(OutputWeightEnd)
-        TestingAcc = show_accuracy(OutputOfTest1,test_y)
+        TestingAcc = show_accuracy_binary(OutputOfTest1,test_y)
         
         Test_time = time.time() - time_start
         test_time[0][e+1] = Test_time
